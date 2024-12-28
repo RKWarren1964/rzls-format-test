@@ -1,9 +1,6 @@
-@page "/rzls-format-test-fail"
-@using Microsoft.AspNetCore.Components.Rendering
+@page "/rzls-format-test-pass"
 
-@inject NavigationManager NavigationManager
-
-<PageTitle>RZLS Format Test Fail</PageTitle>
+<PageTitle>RZLS Format Test Pass</PageTitle>
 
 <MudText Typo="Typo.h4">Company</MudText>
 
@@ -39,8 +36,8 @@
 
         @* Previous Names *@
         <MudItem xs="12">
-          <MudTextField T="string" ReadOnly="true" Class="ma-4" Variant="Variant.Outlined" Value="@(string.Join("
-            , ", PreviousCompanyNames))" Immediate="true" Label="Previous Names">
+        <MudTextField T="string" ReadOnly="true" Class="ma-4" Variant="Variant.Outlined" 
+                      Value="@(string.Join(", ", PreviousCompanyNames))" Immediate="true" Label="Previous Names">
           </MudTextField>
         </MudItem>
 
@@ -405,5 +402,4 @@ private List<ContactModel> Contacts { get; set; } = [];
         public string MobilePhone { get; set; } = string.Empty;
         public string Fax { get; set; } = string.Empty;
         }
-
         }

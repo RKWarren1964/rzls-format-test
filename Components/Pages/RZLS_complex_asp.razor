@@ -1,0 +1,312 @@
+@page "/complex-form"
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+
+<PageTitle>Complex Form</PageTitle>
+
+<div class="container-fluid">
+  <h1 class="display-4 mb-4">Complex Form Management</h1>
+
+  <EditForm Model="@formModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator/>
+    <ValidationSummary class="alert alert-danger"/>
+
+    <div class="row">
+      <!-- Basic Information Section -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Basic Information</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group mb-3">
+              <label class="form-label">Reference Number</label>
+              <div class="input-group">
+                <span class="input-group-text">REF-</span>
+                <InputText @bind-Value="formModel.ReferenceNumber" class="form-control"/>
+              </div>
+              <ValidationMessage For="@(() => formModel.ReferenceNumber)"/>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Title</label>
+              <InputText @bind-Value="formModel.Title" class="form-control"/>
+              <ValidationMessage For="@(() => formModel.Title)"/>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label class="form-label">First Name</label>
+                  <InputText @bind-Value="formModel.FirstName" class="form-control"/>
+                  <ValidationMessage For="@(() => formModel.FirstName)"/>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <label class="form-label">Last Name</label>
+                  <InputText @bind-Value="formModel.LastName" class="form-control"/>
+                  <ValidationMessage For="@(() => formModel.LastName)"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Email Address</label>
+              <InputText @bind-Value="formModel.Email" class="form-control" type="email"/>
+              <ValidationMessage For="@(() => formModel.Email)"/>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Phone Number</label>
+              <InputText @bind-Value="formModel.PhoneNumber" class="form-control"/>
+              <ValidationMessage For="@(() => formModel.PhoneNumber)"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Details Section -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header bg-success text-white">
+            <h3 class="card-title mb-0">Additional Details</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group mb-3">
+              <label class="form-label">Department</label>
+              <InputSelect @bind-Value="formModel.Department" class="form-select">
+                <option value="">Select Department</option>
+                <option value="HR">Human Resources</option>
+                <option value="IT">Information Technology</option>
+                <option value="FIN">Finance</option>
+                <option value="MKT">Marketing</option>
+                <option value="OPS">Operations</option>
+              </InputSelect>
+              <ValidationMessage For="@(() => formModel.Department)"/>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Status</label>
+              <InputSelect @bind-Value="formModel.Status" class="form-select">
+                <option value="">Select Status</option>
+                @foreach (var status in statusOptions)
+                {
+                  <option value="@status.Value">@status.Text</option>
+                }
+              </InputSelect>
+              <ValidationMessage For="@(() => formModel.Status)"/>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Start Date</label>
+              <InputDate @bind-Value="formModel.StartDate" class="form-control"/>
+              <ValidationMessage For="@(() => formModel.StartDate)"/>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Priority</label>
+              <div class="btn-group" role="group">
+                @for (int i = 1;
+                        i
+                        <= 5;
+                        i++)
+                {
+                  var priorityValue = i;
+                  <input type="radio" class="btn-check" name="priority"
+                         id="priority@(i)" value="@i" checked="@(formModel.Priority == i)"
+                         @onchange="@(() => formModel.Priority = priorityValue)"/>
+                  <label class="btn btn-outline-primary" for="priority@(i)">@i</label>
+                }
+              </div>
+              <ValidationMessage For="@(() => formModel.Priority)"/>
+            </div>
+
+            <div class="form-group mb-3">
+              <div class="form-check">
+                <InputCheckbox @bind-Value="formModel.IsUrgent" class="form-check-input"/>
+                <label class="form-check-label">Is Urgent</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header bg-info text-white">
+            <h3 class="card-title mb-0">Description and Notes</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group mb-3">
+              <label class="form-label">Description</label>
+              <InputTextArea @bind-Value="formModel.Description" class="form-control" rows="5"/>
+              <ValidationMessage For="@(() => formModel.Description)"/>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Tags</label>
+              <InputText @bind-Value="formModel.Tags" class="form-control" @onkeyup="HandleTagInput"/>
+              <small class="form-text text-muted">Enter tags separated by commas</small>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Attachments</label>
+              <InputFile OnChange="@HandleFileSelected" class="form-control" multiple/>
+              @if (selectedFiles.Any())
+              {
+                <ul class="mt-2">
+                  @foreach (var file in selectedFiles)
+                  {
+                    <li>@file</li>
+                  }
+                </ul>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mt-4 mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" @onclick="NavigateBack">
+            <i class="bi bi-arrow-left"></i> Back
+          </button>
+          <div>
+            <button type="button" class="btn btn-warning me-2" @onclick="ResetForm">
+              <i class="bi bi-arrow-counterclockwise"></i> Reset
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save"></i> Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </EditForm>
+</div>
+
+@code {
+  private ComplexFormModel formModel = new();
+  private List<string> selectedFiles = new();
+
+  private List<(string Value, string Text)> statusOptions = new()
+  {
+    ("1", "Active"),
+    ("2", "Pending"),
+    ("3", "Suspended"),
+    ("4", "Archived")
+  };
+
+  private async Task HandleValidSubmit()
+  {
+    try
+    {
+      NavigationManager.NavigateTo("/confirmation");
+    }
+    catch (Exception ex)
+    {
+      // Handle error appropriately
+    }
+  }
+
+  private async Task HandleFileSelected(InputFileChangeEventArgs e)
+  {
+    selectedFiles.Clear();
+    foreach (var file in e.GetMultipleFiles())
+    {
+      selectedFiles.Add(file.Name);
+      formModel.Attachments.Add(file);
+    }
+  }
+
+  private void HandleTagInput(KeyboardEventArgs e)
+  {
+    if (e.Key == ",")
+    {
+      var tags = formModel.Tags?.Split(',').Select(t => t.Trim()).Where(t => !string.IsNullOrEmpty(t));
+      if (tags != null)
+      {
+        formModel.Tags = string.Join(", ", tags);
+      }
+    }
+  }
+
+  private void NavigateBack()
+  {
+    NavigationManager.NavigateTo("/");
+  }
+
+  private void ResetForm()
+  {
+    formModel = new ComplexFormModel();
+    selectedFiles.Clear();
+  }
+
+
+  public class ComplexFormModel
+  {
+    [Required]
+    [Display(Name = "Reference Number")]
+    [StringLength(20)]
+    public string ReferenceNumber { get; set; }
+
+    [Required]
+    [Display(Name = "Title")]
+    [StringLength(100)]
+    public string Title { get; set; }
+
+    [Required]
+    [Display(Name = "First Name")]
+    [StringLength(50)]
+    public string FirstName { get; set; }
+
+    [Required]
+    [Display(Name = "Last Name")]
+    [StringLength(50)]
+    public string LastName { get; set; }
+
+    [Required]
+    [EmailAddress]
+    [Display(Name = "Email Address")]
+    public string Email { get; set; }
+
+    [Required]
+    [Display(Name = "Phone Number")]
+    [Phone]
+    public string PhoneNumber { get; set; }
+
+    [Required]
+    [Display(Name = "Department")]
+    public string Department { get; set; }
+
+    [Required] [Display(Name = "Status")] public string Status { get; set; }
+
+    [Required]
+    [Display(Name = "Start Date")]
+    public DateTime StartDate { get; set; } = DateTime.Today;
+
+    [Required]
+    [Display(Name = "Priority")]
+    [Range(1, 5)]
+    public int Priority { get; set; } = 1;
+
+    [Display(Name = "Is Urgent")] public bool IsUrgent { get; set; }
+
+    [Required]
+    [Display(Name = "Description")]
+    [StringLength(2000)]
+    public string Description { get; set; }
+
+    [Display(Name = "Tags")] public string Tags { get; set; }
+
+    [Display(Name = "Attachments")] public List<IBrowserFile> Attachments { get; set; } = new();
+  }
+
+}

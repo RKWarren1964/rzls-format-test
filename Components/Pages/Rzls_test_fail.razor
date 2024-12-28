@@ -8,7 +8,7 @@
 <MudText Typo="Typo.h4">Company</MudText>
 
 <MudForm
-    @ref="@_companyMudForm"
+    ref="@_companyMudForm"
     ReadOnly="@IsReadOnly"
     ValidationDelay="0">
 
@@ -312,7 +312,7 @@
                 <ChildRowContent>
                     <MudForm
                         Model="@Contacts.FirstOrDefault()"
-                        @ref="@_contactMudForm"/>
+                        ref="@_contactMudForm"/>
 
                     <MudGrid Justify="Justify.SpaceEvenly">
 
