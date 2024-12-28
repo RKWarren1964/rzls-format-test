@@ -1,0 +1,409 @@
+@page "/rzls-format-test-fail"
+@using Microsoft.AspNetCore.Components.Rendering
+
+@inject NavigationManager NavigationManager
+
+<PageTitle>RZLS Format Test Fail</PageTitle>
+
+<MudText Typo="Typo.h4">Company</MudText>
+
+<MudForm @ref="@_companyMudForm" ReadOnly="@IsReadOnly" ValidationDelay="0">
+
+  <MudExpansionPanels MultiExpansion="false">
+    <MudExpansionPanel Text="Main Details" IsInitiallyExpanded=true>
+      <MudGrid Justify="Justify.SpaceEvenly">
+
+        @* Name *@
+        <MudItem xs="6">
+          <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@Name" Immediate="true" Label="Name">
+          </MudTextField>
+        </MudItem>
+
+        @* IsActive *@
+        <MudItem xs="2">
+          <MudSwitch Class="ma-4" Color="Color.Primary" ReadOnly="true" @bind-Value="@_isActive" Label="Active">
+          </MudSwitch>
+        </MudItem>
+
+        @* IsVendor *@
+        <MudItem xs="2">
+          <MudSwitch Class="ma-4" Color="Color.Primary" @bind-Value="@IsVendor" Label="Vendor">
+          </MudSwitch>
+        </MudItem>
+
+        @* IsCustomer *@
+        <MudItem xs="2">
+          <MudSwitch Class="ma-4" Color="Color.Primary" @bind-Value="@_isCustomer" Label="Customer">
+          </MudSwitch>
+        </MudItem>
+
+        @* Previous Names *@
+        <MudItem xs="12">
+          <MudTextField T="string" ReadOnly="true" Class="ma-4" Variant="Variant.Outlined" Value="@(string.Join("
+            , ", PreviousCompanyNames))" Immediate="true" Label="Previous Names">
+          </MudTextField>
+        </MudItem>
+
+        @* Account Number *@
+        <MudItem xs="4">
+          <MudTextField Class="ma-4" ReadOnly="true" Variant="Variant.Outlined" @bind-Value="@AccountNumber"
+            Immediate="true" Label="Account Number">
+          </MudTextField>
+        </MudItem>
+
+        @* Url *@
+        <MudItem xs="8">
+          <MudStack Row="true" Class="justify-center">
+            <MudTextField Class="mt-4 mb-4 ml-4" Variant="Variant.Outlined" @bind-Value="@WebUrl" Immediate="true"
+              Label="Website">
+            </MudTextField>
+            <MudIconButton Class="mt-4 mb-4 mr-4" Icon="@Icons.Material.Filled.Link" Color="Color.Info" Href="@WebUrl"
+              Target="_blank" aria-label="Website">
+            </MudIconButton>
+          </MudStack>
+        </MudItem>
+
+        @* Notes *@
+        <MudItem xs="12">
+          <MudTextField Class="ma-4" Lines="3" Variant="Variant.Outlined" @bind-Value="@Notes" Immediate="true"
+            Label="Notes">
+          </MudTextField>
+        </MudItem>
+
+      </MudGrid>
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Addresses" IsInitiallyExpanded=false>
+      <MudGrid Justify="Justify.SpaceEvenly">
+
+        @* Shipping Address *@
+        <MudItem xs="6">
+          <MudForm>
+            Model="@ShippingAddress"
+            ref="@_shippingAddressMudForm"
+            <MudGrid Justify="Justify.SpaceEvenly">
+
+              @* Shipping Street *@
+              <MudItem xs="12">
+                <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@ShippingAddress.Street"
+                  Immediate="true" Label="Shipping Street">
+                </MudTextField>
+              </MudItem>
+
+              @* Shipping City *@
+              <MudItem xs="12">
+                <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@ShippingAddress.City"
+                  Immediate="true" Label="Shipping City">
+                </MudTextField>
+              </MudItem>
+
+              @* Shipping State *@
+              <MudItem xs="5">
+                <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@ShippingAddress.State"
+                  Immediate="true" Label="Shipping State">
+                </MudTextField>
+              </MudItem>
+
+              @* Shipping Postal Code *@
+              <MudItem xs="7">
+                <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@ShippingAddress.PostalCode"
+                  Immediate="true" Label="Shipping Postal Code">
+                </MudTextField>
+              </MudItem>
+
+              @* Shipping Country Or Region *@
+              <MudItem xs="12">
+                <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@ShippingAddress.CountryOrRegion"
+                  Immediate="true" Label="Shipping Country Or Region">
+                </MudTextField>
+              </MudItem>
+
+            </MudGrid>
+          </MudForm>
+        </MudItem>
+
+        @* Billing Address *@
+        <MudItem xs="6">
+          <MudForm>
+            Model="@BillingAddress"
+            ref="@_billingAddressMudForm"
+
+            <MudGrid Justify="Justify.SpaceEvenly">
+
+              @* Billing Street *@
+              <MudItem xs="12">
+                <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@BillingAddress.Street"
+                  Immediate="true" Label="Billing Street">
+                </MudTextField>
+              </MudItem>
+
+              @* Billing City *@
+              <MudItem xs="12">
+                <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@BillingAddress.City"
+                  Immediate="true" Label="Billing City">
+                </MudTextField>
+              </MudItem>
+
+              @* Billing State *@
+              <MudItem xs="5">
+                <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@BillingAddress.State"
+                  Immediate="true" Label="Billing State">
+                </MudTextField>
+              </MudItem>
+
+              @* Billing Postal Code *@
+              <MudItem xs="7">
+                <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@BillingAddress.PostalCode"
+                  Immediate="true" Label="Billing Postal Code">
+                </MudTextField>
+              </MudItem>
+
+              @* Billing Country Or Region *@
+              <MudItem xs="12">
+                <MudTextField Class="ma-4" Variant="Variant.Outlined" @bind-Value="@BillingAddress.CountryOrRegion"
+                  Immediate="true" Label="Billing Country Or Region">
+                </MudTextField>
+              </MudItem>
+
+            </MudGrid>
+          </MudForm>
+        </MudItem>
+
+      </MudGrid>
+    </MudExpansionPanel>
+
+    <!-- Remove the commented section to get a good format -->
+    <!-- TODO -->
+
+    <!-- <MudExpansionPanel -->
+    <!--     Text="Contacts" -->
+    <!--     IsInitiallyExpanded=false> -->
+    <!---->
+    <!--     <MudDataGrid -->
+    <!--         Items="@Contacts" -->
+    <!--         ReadOnly="@IsReadOnly" -->
+    <!--         SortMode="@SortMode.Single" -->
+    <!--         Filterable="true" -->
+    <!--         QuickFilter="@_quickFilterContacts" -->
+    <!--         Bordered="true" -->
+    <!--         Dense="true" -->
+    <!--         MultiSelection="false"> -->
+    <!--         <ToolBarContent> -->
+    <!--             <MudSpacer/> -->
+    <!--             <MudTextField -->
+    <!--                 @bind-Value="_searchStringContacts" -->
+    <!--                 Placeholder="Search" -->
+    <!--                 Adornment="Adornment.Start" -->
+    <!--                 Immediate="true" -->
+    <!--                 AdornmentIcon="@Icons.Material.Filled.Search" -->
+    <!--                 IconSize="Size.Medium" -->
+    <!--                 Class="mt-0"> -->
+    <!--             </MudTextField> -->
+    <!--             <MudSpacer/> -->
+    <!--             <MudButton -->
+    <!--                 Size="@Size.Small" -->
+    <!--                 Variant="@Variant.Filled" -->
+    <!--                 Color="@Color.Primary" -->
+    <!--             > -->
+    <!--                 New -->
+    <!--             </MudButton> -->
+    <!--         </ToolBarContent> -->
+    <!--         <Columns> -->
+    <!--             <HierarchyColumn T="ContactModel" OpenIcon="@Icons.Material.Outlined.Save" -->
+    <!--                              ClosedIcon="@Icons.Material.Outlined.Edit"/> -->
+    <!--             <PropertyColumn Property="x => x.Name" Title="Name" Required="false"/> -->
+    <!--             <PropertyColumn Property="x => x.EmailAddress" Title="Email" Required="false"/> -->
+    <!--             <PropertyColumn Property="x => x.JobTitle" Title="Title" Required="false"/> -->
+    <!--             <PropertyColumn Property="x => x.Fax" Title="Fax" Required="false"/> -->
+    <!--             <PropertyColumn Property="x => x.HomePhone" Title="Home" Required="false"/> -->
+    <!--             <PropertyColumn Property="x => x.MobilePhone" Title="Mobile" Required="false"/> -->
+    <!--             <PropertyColumn Property="x => x.WorkPhone" Title="Work" Required="false"/> -->
+    <!--         </Columns> -->
+    <!--         <ChildRowContent> -->
+    <!--             <MudForm -->
+    <!--                 Model="@Contacts.FirstOrDefault()" -->
+    <!--                 @ref="@_contactMudForm"/> -->
+    <!---->
+    <!--             <MudGrid Justify="Justify.SpaceEvenly"> -->
+    <!---->
+    <!--                 @* Contact Name *@ -->
+    <!--                 <MudItem xs="4"> -->
+    <!--                     <MudTextField -->
+    <!--                         Class="ma-0" -->
+    <!--                         Variant="Variant.Outlined" -->
+    <!--                         @bind-Value="@context.Item.Name" -->
+    <!---->
+    <!--                         Immediate="true" -->
+    <!--                         Label="Name"> -->
+    <!--                     </MudTextField> -->
+    <!--                 </MudItem> -->
+    <!---->
+    <!--                 @* Contact Email *@ -->
+    <!--                 <MudItem xs="4"> -->
+    <!--                     <MudTextField -->
+    <!--                         Class="ma-0" -->
+    <!--                         Variant="Variant.Outlined" -->
+    <!--                         @bind-Value="@context.Item.EmailAddress" -->
+    <!---->
+    <!--                         Immediate="true" -->
+    <!--                         Label="Email"> -->
+    <!--                     </MudTextField> -->
+    <!--                 </MudItem> -->
+    <!---->
+    <!--                 @* Contact Title *@ -->
+    <!--                 <MudItem xs="4"> -->
+    <!--                     <MudTextField -->
+    <!--                         Class="ma-0" -->
+    <!--                         Variant="Variant.Outlined" -->
+    <!--                         @bind-Value="@context.Item.JobTitle" -->
+    <!---->
+    <!--                         Immediate="true" -->
+    <!--                         Label="Title"> -->
+    <!--                     </MudTextField> -->
+    <!--                 </MudItem> -->
+    <!---->
+    <!--                 @* Contact Work Phone *@ -->
+    <!--                 <MudItem xs="3"> -->
+    <!--                     <MudTextField -->
+    <!--                         Class="ma-0" -->
+    <!--                         Variant="Variant.Outlined" -->
+    <!--                         @bind-Value="@context.Item.WorkPhone" -->
+    <!---->
+    <!--                         Immediate="true" -->
+    <!--                         Label="Work Phone"> -->
+    <!--                     </MudTextField> -->
+    <!--                 </MudItem> -->
+    <!---->
+    <!--                 @* Contact Mobile Phone *@ -->
+    <!--                 <MudItem xs="3"> -->
+    <!--                     <MudTextField -->
+    <!--                         Class="ma-0" -->
+    <!--                         Variant="Variant.Outlined" -->
+    <!--                         @bind-Value="@context.Item.MobilePhone" -->
+    <!---->
+    <!--                         Immediate="true" -->
+    <!--                         Label="Mobile Phone"> -->
+    <!--                     </MudTextField> -->
+    <!--                 </MudItem> -->
+    <!---->
+    <!--                 @* Contact Home Phone *@ -->
+    <!--                 <MudItem xs="3"> -->
+    <!--                     <MudTextField -->
+    <!--                         Class="ma-0" -->
+    <!--                         Variant="Variant.Outlined" -->
+    <!--                         @bind-Value="@context.Item.HomePhone" -->
+    <!---->
+    <!--                         Immediate="true" -->
+    <!--                         Label="Home Phone"> -->
+    <!--                     </MudTextField> -->
+    <!--                 </MudItem> -->
+    <!---->
+    <!--                 @* Contact Fax *@ -->
+    <!--                 <MudItem xs="3"> -->
+    <!--                     <MudTextField -->
+    <!--                         Class="ma-0" -->
+    <!--                         Variant="Variant.Outlined" -->
+    <!--                         @bind-Value="@context.Item.Fax" -->
+    <!---->
+    <!--                         Immediate="true" -->
+    <!--                         Label="Fax"> -->
+    <!--                     </MudTextField> -->
+    <!--                 </MudItem> -->
+    <!---->
+    <!--             </MudGrid> -->
+    <!--         </ChildRowContent> -->
+    <!--     </MudDataGrid> -->
+    <!-- </MudExpansionPanel> -->
+  </MudExpansionPanels>
+</MudForm>
+
+@* Button Bar 2 *@
+<MudStack Row="true" Class="justify-center">
+
+  <!-- Save Button -->
+  <MudButton Class="align-center justify-center ma-6 pa-4" Variant="Variant.Filled"
+    StartIcon="@Icons.Material.Filled.Save" Color="Color.Info">
+    Save Company
+  </MudButton>
+
+  <!-- Reset Button -->
+  <MudButton Class="align-center justify-center ma-6 pa-4" Variant="Variant.Filled"
+    StartIcon="@Icons.Material.Filled.Undo" Color="Color.Warning">
+    Reset To Last Saved
+  </MudButton>
+</MudStack>
+
+@code {
+
+private MudForm? _companyMudForm;
+private MudForm? _shippingAddressMudForm;
+private MudForm? _contactMudForm;
+private MudForm? _billingAddressMudForm;
+
+private string Name { get; set; } = "Name";
+private string PreviousCompanyNames { get; set; } = "PreviousCompanyNames";
+private string AccountNumber { get; set; } = "AccountNumber";
+private string WebUrl { get; set; } = "WebUrl";
+private string Notes { get; set; } = "Notes";
+private string _searchStringContacts = "";
+
+private bool _isActive;
+public bool IsVendor;
+private bool _isCustomer;
+public bool IsReadOnly;
+
+private PhysicalAddressModel ShippingAddress { get; set; } = new();
+private PhysicalAddressModel BillingAddress { get; set; } = new();
+private List<ContactModel> Contacts { get; set; } = [];
+
+
+  private Func<ContactModel, bool> _quickFilterContacts => x =>
+    {
+    if (string.IsNullOrWhiteSpace(_searchStringContacts))
+    return true;
+
+    if (x.Name.Contains(_searchStringContacts, StringComparison.OrdinalIgnoreCase))
+    return true;
+
+    if (x.EmailAddress.Contains(_searchStringContacts, StringComparison.OrdinalIgnoreCase))
+    return true;
+
+    if (x.JobTitle.Contains(_searchStringContacts, StringComparison.OrdinalIgnoreCase))
+    return true;
+
+    if (x.Fax.Contains(_searchStringContacts, StringComparison.OrdinalIgnoreCase))
+    return true;
+
+    if (x.HomePhone.Contains(_searchStringContacts, StringComparison.OrdinalIgnoreCase))
+    return true;
+
+    if (x.MobilePhone.Contains(_searchStringContacts, StringComparison.OrdinalIgnoreCase))
+    return true;
+    if (x.WorkPhone.Contains(_searchStringContacts, StringComparison.OrdinalIgnoreCase))
+    return true;
+
+    return false;
+    };
+
+    public class PhysicalAddressModel
+    {
+    public string Street { get; set; } = string.Empty;
+    public string PoBox { get; set; } = string.Empty;
+    public string City { get; set; } = string.Empty;
+    public string State { get; set; } = string.Empty;
+    public string CountryOrRegion { get; set; } = string.Empty;
+    public string PostalCode { get; set; } = string.Empty;
+    public IDictionary<string, string> AdditionalData { get; set; } = new Dictionary<string, string>();
+        }
+
+        public class ContactModel
+        {
+        public string Name { get; set; } = string.Empty;
+        public string JobTitle { get; set; } = string.Empty;
+        public string EmailAddress { get; set; } = string.Empty;
+        public string WorkPhone { get; set; } = string.Empty;
+        public string HomePhone { get; set; } = string.Empty;
+        public string MobilePhone { get; set; } = string.Empty;
+        public string Fax { get; set; } = string.Empty;
+        }
+
+        }
